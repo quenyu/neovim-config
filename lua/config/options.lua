@@ -32,7 +32,7 @@ vim.o.mouse              = 'a'
 -- Vim specific
 vim.o.hidden             = true                         -- Do not save when switching buffers
 vim.o.fileencoding       = "utf-8"
-vim.o.spell              = false                         -- As of v0.8.0 it only checks comments
+vim.o.spell              = true                         -- As of v0.8.0 it only checks comments
 vim.o.spelllang          = "en_us"
 vim.o.completeopt        = "menuone,noinsert,noselect"
 vim.o.wildmode           = "longest,full"               -- Display auto-complete in Command Mode

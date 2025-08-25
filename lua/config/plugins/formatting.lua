@@ -8,20 +8,20 @@ return {
   { 'junegunn/vim-easy-align' },
 
   -- Python
-  { "EgZvor/vim-black" },
-  { 'jeetsukumaran/vim-python-indent-black' },
-  { "microsoft/python-type-stubs" },
+  { "EgZvor/vim-black", lazy = true,},
+  { 'jeetsukumaran/vim-python-indent-black', lazy = true, },
+  { "microsoft/python-type-stubs", lazy = true, },
 
   -- Markdown
-  { 'godlygeek/tabular' },
-  { 'ellisonleao/glow.nvim', config = true, cmd = "Glow" },
+  { 'godlygeek/tabular', lazy = true, },
+  { 'ellisonleao/glow.nvim', config = true, cmd = "Glow",  lazy = true, },
 
   -- LaTex
-  { 'lervag/vimtex', lazy = false, init =  function () vim.g.vimtex_view_method="zathura" end },
+  { 'lervag/vimtex', lazy = true, init =  function () vim.g.vimtex_view_method="zathura" end },
 
   -- TOML Files
-  { 'cespare/vim-toml' },
+  { 'cespare/vim-toml', lazy = true, },
 
   -- kitty config syntax highlighting
-  { "fladson/vim-kitty" },
+  { "fladson/vim-kitty", lazy = true, },
 }

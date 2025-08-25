@@ -1,6 +1,7 @@
 return {
   {
     'eandrju/cellular-automaton.nvim',
+    event = "VeryLazy",
     config = function()
       local ca = require('cellular-automaton')
       local animations = {'make_it_rain', 'game_of_life', 'scramble'}

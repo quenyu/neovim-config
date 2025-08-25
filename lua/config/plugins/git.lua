@@ -14,6 +14,7 @@ return {
   {
     "folke/trouble.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons", "folke/todo-comments.nvim" },
+    layz = true,
     opts = {
       focus = true,
     },
@@ -34,6 +35,7 @@ return {
   -- Gitsigns
   {
     'lewis6991/gitsigns.nvim',
+    layz = true,
     dependencies = {'nvim-lua/plenary.nvim'},
     event = { "BufReadPre", "BufNewFile" },
     opts = {on_attach = function(bufnr)

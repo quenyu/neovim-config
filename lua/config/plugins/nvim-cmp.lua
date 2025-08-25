@@ -1,7 +1,7 @@
 return {
 
   "hrsh7th/nvim-cmp",
-  -- event = "InsertEnter",
+  event = {"InsertEnter", "CmdlineEnter"},
   branch = "main", -- fix for deprecated functions coming in nvim 0.13
   dependencies = {
     "hrsh7th/cmp-buffer", -- source for text in buffer
