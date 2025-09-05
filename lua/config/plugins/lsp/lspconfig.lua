@@ -95,7 +95,7 @@ return {
         basedpyright = {
           disableOrganizeImports = true,
           analysis = {
-            typeCheckingMode = 'standard',
+            typeCheckingMode = 'basic',
             capabilities = capabilities,
             useLibraryCodeForTypes = true,
             diagnosticSeverityOverrides = {
