@@ -36,7 +36,7 @@ vim.o.spell              = true                         -- As of v0.8.0 it only 
 vim.o.spelllang          = "en_us"
 vim.o.completeopt        = "menuone,noinsert,noselect"
 vim.o.wildmode           = "longest,full"               -- Display auto-complete in Command Mode
-vim.o.updatetime         = 300                          -- Delay until write to Swap and HoldCommand event
+vim.o.updatetime         = 250                          -- Faster updates for real-time diagnostics and autocomplete
 vim.g.do_file_type_lua   = 1
 
 -- Netrw
@@ -50,9 +50,12 @@ vim.g.netrw_winsize = 16
 -- vim.g.loaded_netrwPlugin = false                     -- I can't remember what the issue was with this option
 
 -- Python providers
-local pynvim_env        = os.getenv("HOME").."/.local/bin/pyenv/versions/pynvim/"
-vim.g.python3_host_prog = pynvim_env.."bin/python"
-vim.g.black_virtualenv  = pynvim_env
+local home_dir = os.getenv("HOME") or os.getenv("USERPROFILE")
+if home_dir then
+  local pynvim_env = home_dir.."/.local/bin/pyenv/versions/pynvim/"
+  vim.g.python3_host_prog = pynvim_env.."bin/python"
+  vim.g.black_virtualenv  = pynvim_env
+end
 
 -- Disable unused providers
 vim.g.loaded_perl_provider = 0

@@ -16,3 +16,9 @@ vim.cmd("command! HelpTags Telescope help_tags")
 
 -- Create ctags
 vim.cmd('command! MakeCTags !ctags -R --exclude=@.ctagsignore .')
+
+-- Fix Treesitter parsers (useful when parsers are corrupted or wrong platform)
+vim.cmd('command! TSReinstall lua require("nvim-treesitter.install").update({ with_sync = true })')
+vim.cmd('command! TSReinstallAll lua vim.cmd("silent !powershell -Command Remove-Item -Recurse -Force \\\"$env:LOCALAPPDATA\\nvim-data\\lazy\\nvim-treesitter\\parser\\\" -ErrorAction SilentlyContinue") vim.cmd("TSUpdate")')
+-- Remove all .so files (Linux format) and reinstall for Windows
+vim.cmd('command! TSFixWindows lua vim.cmd("silent !powershell -Command Get-ChildItem \\\"$env:LOCALAPPDATA\\nvim-data\\lazy\\nvim-treesitter\\parser\\\" -Filter \\\"*.so\\\" | Remove-Item -Force") vim.cmd("TSUpdate")')

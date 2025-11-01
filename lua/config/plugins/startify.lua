@@ -13,7 +13,8 @@ return {
         \ {'c': '~/.config/zsh/.zshrc'},
         \ {'a': '~/.config/zsh/.zsh_aliases'},
         \ {'d': '~/Repos/configs/dotfiles/README.md'},
-        \ {'n': '~/.config/nvim/init.lua'}
+        \ {'n': '~/.config/nvim/init.lua'},
+        \ {'w': '~/Desktop'},
         \ ]
 
       " Change list order

@@ -36,6 +36,7 @@ return {
         "texlab",
         "marksman",
         "ts_ls",
+        "gopls", -- Go language server
         -- "html_ls",
       },
 
@@ -45,6 +46,9 @@ return {
       ensure_installed = {
         "pylint",
         "clangd",
+        "gopls",    -- Go language server
+        "gofumpt",  -- Go formatter (stricter gofmt)
+        "goimports-reviser", -- Go imports organizer
       },
     })
   end,

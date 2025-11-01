@@ -12,5 +12,11 @@
 
 -- Rose Pine
 -- vim.cmd("colorscheme rose-pine")
-vim.cmd("colorscheme rose-pine-moon")
+-- vim.cmd("colorscheme rose-pine-moon")
 -- vim.cmd("colorscheme rose-pine-dawn")
+
+-- Black Metal themes
+-- Доступные темы: mayhem, burzum, bathory, dark-funeral, darkthrone, emperor,
+-- gorgoroth, immortal, impaled-nazarene, khold, marduk, nile, taake, thyrfing, venom, windir
+-- Для альтернативных вариантов добавьте суффикс -alt: mayhem-alt, burzum-alt и т.д.
+vim.cmd("colorscheme immortal")

@@ -3,10 +3,7 @@ return {
   {
     'tpope/vim-fugitive',
     config = function ()
-      local keymap = require("utils")
-
-      keymap.nnoremap("<leader>G", ":G<CR>")
-      keymap.nnoremap("<leader>gl", ":Gclog<CR>")
+      -- Vim-fugitive keymaps are now in lua/config/keymaps.lua
     end
   },
 

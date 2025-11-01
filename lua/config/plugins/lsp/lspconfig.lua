@@ -53,12 +53,39 @@ return {
       end,
     })
 
-    -- Set the diagnostic config
+    -- Set the diagnostic config - Show errors in real-time
     vim.diagnostic.config({
-      virtual_text = false,  -- Specify Enable virtual text for diagnostics
-      underline = false,     -- Specify Underline diagnostics
-      update_in_insert = false,  -- Keep diagnostics active in insert mode
-      signs = true,
+      virtual_text = {
+        enabled = true,
+        severity = { min = vim.diagnostic.severity.WARN },  -- Show warnings and errors inline
+        source = "if_many",  -- Only show source if there are multiple sources
+        format = function(diagnostic)
+          -- Truncate long messages
+          local message = diagnostic.message
+          if #message > 50 then
+            message = message:sub(1, 47) .. "..."
+          end
+          return message
+        end,
+      },
+      underline = true,     -- Underline errors and warnings
+      update_in_insert = true,  -- Update diagnostics while typing (real-time)
+      signs = true,         -- Show signs in sign column
+      severity_sort = true,
+      float = {
+        border = "rounded",
+        source = "always",
+        header = { "Diagnostics", "Normal" },
+        prefix = function(diagnostic)
+          local icons = {
+            Error = "✗ ",
+            Warn = "⚠ ",
+            Info = "ℹ ",
+            Hint = "→ ",
+          }
+          return icons[diagnostic.severity] or ""
+        end,
+      },
     })
 
 
@@ -142,6 +169,33 @@ return {
 
     -- HTML
     vim.lsp.enable('html_lsp')
+
+    -- Go
+    vim.lsp.config('gopls', {
+      capabilities = capabilities,
+      settings = {
+        gopls = {
+          analyses = {
+            unusedparams = true,
+            shadow = true,
+          },
+          staticcheck = true,
+          gofumpt = true,
+          usePlaceholders = true,
+          codelenses = {
+            gc_details = true,
+            test = true,
+            tidy = true,
+            upgrade_dependency = true,
+            vendor = true,
+          },
+        },
+      },
+      init_options = {
+        usePlaceholders = true,
+      },
+    })
+    vim.lsp.enable('gopls')
 
   end
 }

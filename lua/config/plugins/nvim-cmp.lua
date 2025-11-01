@@ -10,6 +10,7 @@ return {
     "rafamadriz/friendly-snippets", -- snippets
     "L3MON4D3/LuaSnip",
     "nvim-treesitter/nvim-treesitter",
+    "Exafunction/codeium.nvim", -- Codeium AI completion
     -- "onsails/lspkind.nvim", -- vs-code pictograms
   },
   config = function ()
@@ -26,10 +27,19 @@ return {
     end
 
     cmp.setup({
-      preselect = cmp.PreselectMode.None,
+      preselect = cmp.PreselectMode.Item,  -- Preselect first item for faster completion
 
       experimental = {
-        ghost_text = true,
+        ghost_text = {
+          hl_group = "CmpGhostText",
+        },
+      },
+
+      -- Performance settings
+      performance = {
+        debounce = 60,
+        throttle = 30,
+        fetching_timeout = 500,
       },
 
       -- Snippet engine, required
@@ -39,13 +49,21 @@ return {
         end,
       },
 
+      -- Configure completion sources with priority
       sources = cmp.config.sources({
-        { name = "nvim_lsp", group_index = 2 },
-        { name = "copilot", group_index = 2 },
-        { name = "buffer" , group_index = 2 },
-        { name = "path", group_index = 2 },
-        { name = "luasnip", group_index = 2 },
+        { name = "nvim_lsp", priority = 1000, group_index = 1 },  -- LSP has highest priority
+        { name = "copilot", priority = 900, group_index = 2 },   -- GitHub Copilot
+        { name = "luasnip", priority = 750, group_index = 2 },    -- Snippets
+        { name = "buffer", priority = 500, group_index = 3 },     -- Buffer text
+        { name = "path", priority = 250, group_index = 3 },       -- File paths
+        -- { name = "codeium", priority = 800, group_index = 2 },    -- Codeium (disabled - requires gzip)
       }),
+
+      -- Better completion behavior
+      completion = {
+        keyword_length = 1,  -- Start completion after 1 character
+        completeopt = "menu,menuone,noinsert,noselect",
+      },
 
 
       mapping = cmp.mapping.preset.insert({
@@ -79,8 +97,9 @@ return {
         -- select completion
         ['<CR>'] = cmp.mapping.confirm({
           behavior = cmp.ConfirmBehavior.Replace,
-          select = false,
+          select = true,  -- Auto-select if there's only one item
         }),
+        ['<C-y>'] = cmp.mapping.confirm({ select = true }),  -- Force confirm with selection
 
         -- Scroll documentation
         ['<C-d>'] = cmp.mapping.scroll_docs(-4),

@@ -15,11 +15,13 @@ return {
         }
       )
 
+      -- Enable Copilot for specific file types
       vim.g.copilot_filetypes = {
           ["*"] = false,
           ["python"] = true,
           ["julia"] = true,
           ["bash"] = true,
+          ["go"] = true,
         }
 
       local suggestion = require("copilot.suggestion")

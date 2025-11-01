@@ -2,44 +2,60 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     event = { "BufReadPre", "BufNewFile" },
-    build = ":TSUpdate",
-    config = function()
-      -- import nvim-treesitter plugin
-      local treesitter = require("nvim-treesitter.configs")
 
-      -- configure treesitter
-      treesitter.setup({ -- enable syntax highlighting
+    build = function()
+      local parser_dir = vim.fn.stdpath("data") .. "/lazy/nvim-treesitter/parser"
+      if vim.fn.isdirectory(parser_dir) == 1 then
+        local files = vim.fn.readdir(parser_dir)
+        for _, f in ipairs(files) do
+          if f:match("%.so$") then
+            os.remove(parser_dir .. "/" .. f)
+          end
+        end
+      end
+
+      vim.cmd("TSUpdate")
+    end,
+
+    config = function()
+      local install = require("nvim-treesitter.install")
+
+      if vim.fn.executable("gcc") == 1 then
+        install.compilers = { "cl" }
+      else
+        install.compilers = { "cl" }
+      end
+
+      install.prefer_git = false
+      install.use_bundler = false
+
+      vim.api.nvim_create_autocmd("VimEnter", {
+        callback = function()
+          local parser_dir = vim.fn.stdpath("data") .. "/lazy/nvim-treesitter/parser"
+          if vim.fn.isdirectory(parser_dir) == 1 then
+            local files = vim.fn.readdir(parser_dir)
+            for _, f in ipairs(files) do
+              if f:match("%.so$") then
+                os.remove(parser_dir .. "/" .. f)
+              end
+            end
+          end
+        end
+      })
+
+      require("nvim-treesitter.configs").setup({
+        ensure_installed = {
+          "json", "yaml", "python", "markdown", "markdown_inline",
+          "bash", "lua", "vim", "gitignore", "c", "julia", "go"
+        },
         highlight = {
           enable = true,
         },
-        -- enable indentation
-        indent = { enable = true },
-
-        -- ensure these languages parsers are installed
-        ensure_installed = {
-          "json",
-          "yaml",
-          "python",
-          "markdown",
-          "markdown_inline",
-          "bash",
-          "lua",
-          "vim",
-          "gitignore",
-          "c",
-          "julia",
+        indent = {
+          enable = true,
         },
-        -- incremental_selection = {
-        --     enable = true,
-        --     keymaps = {
-        --         init_selection = "<C-space>",
-        --         node_incremental = "<C-space>",
-        --         scope_incremental = false,
-        --     },
-        -- },
-        -- additional_vim_regex_highlighting = false,
       })
+
     end,
   },
 }
-

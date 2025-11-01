@@ -1,110 +1,127 @@
--- General keymaps that are not pluggin dependant
--- the file "lua/lsp/utils.lua" contains lsp-specific commands.
-
--- local vim = require("vim")
-local keymaps = require('utils')
-
--- local exprnnoremap = Utils.exprnnoremap
-local nnoremap = keymaps.nnoremap
-local vnoremap = keymaps.vnoremap
-local xnoremap = keymaps.xnoremap
-local inoremap = keymaps.inoremap
--- local tnoremap = Utils.tnoremap
--- local nmap = Utils.nmap
--- local xmap = Utils.xmap
-
+-- Leader
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+local map = vim.keymap.set
+local opts = { noremap = true, silent = true }
 
--- kj to normal mode
-inoremap("kj", "<Esc>")
+-- =========================================================================
+-- GENERAL
+-- =========================================================================
+map("i", "kj", "<Esc>", opts)
+map("n", "<C-u>", "<C-u>zz", opts)
+map("n", "<C-d>", "<C-d>zz", opts)
 
--- page up/down with recentering
-nnoremap("<C-u>", "<C-u>zz")
-nnoremap("<C-d>", "<C-d>zz")
+-- Window navigation
+map("n", "<C-h>", "<C-w>h", opts)
+map("n", "<C-j>", "<C-w>j", opts)
+map("n", "<C-k>", "<C-w>k", opts)
+map("n", "<C-l>", "<C-w>l", opts)
 
--- Run omnifunc, mostly used for autocomplete
-inoremap("<C-SPACE>", "<C-x><C-o>")
+-- Saving
+map({"n","i","v"}, "<C-s>", function()
+  vim.cmd("w")
+end, opts)
 
--- Save with Ctrl + S
-nnoremap("<C-s>", ":w<CR>")
+-- Close
+map("n", "<C-c>", ":q<CR>", opts)
+map("n", "<A-w>", ":bd<CR>", opts)
 
--- Close buffer
-nnoremap("<C-c>", ":q<CR>")
+-- =========================================================================
+-- BUFFERLINE
+-- =========================================================================
+map("n", "<Tab>", ":BufferLineCycleNext<CR>", opts)
+map("n", "<S-Tab>", ":BufferLineCyclePrev<CR>", opts)
+map("n", "<leader>bc", ":BufferLinePickClose<CR>", opts)
+map("n", "<leader>bx", ":bd<CR>", opts)
+map("n", "<leader>bX", ":BufferLineCloseRight<CR>", opts)
+map("n", "<leader>bL", ":BufferLineCloseLeft<CR>", opts)
 
--- Move around windows (shifted to the right)
-nnoremap("<C-h>", "<C-w>h")
-nnoremap("<C-j>", "<C-w>j")
-nnoremap("<C-k>", "<C-w>k")
-nnoremap("<C-l>", "<C-w>l")
+-- =========================================================================
+-- SPLITS
+-- =========================================================================
+map("n", "<leader>ws", ":split<CR>", opts)
+map("n", "<leader>vs", ":vsplit<CR>", opts)
 
--- Switch buffers (needs nvim-bufferline)
-nnoremap("<TAB>", ":BufferLineCycleNext<CR>")
-nnoremap("<S-TAB>", ":BufferLineCyclePrev<CR>")
+-- =========================================================================
+-- TEXT
+-- =========================================================================
+map("n", "Y", "y$", opts)
+map("x", "<leader>p", '"_dP', opts)
+map({"n","v"}, "<leader>d", '"_d', opts)
+map({"n","v"}, "<leader>y", '"+y', opts)
+map({"n","v"}, "<leader>P", '"+p', opts)
 
--- Splits
-nnoremap("<leader>ws", ":split<CR>")
-nnoremap("<leader>vs", ":vsplit<CR>")
+-- =========================================================================
+-- SEARCH
+-- =========================================================================
+map({"n","v"}, "<leader>nh", ":nohlsearch<CR>", opts)
+map("n", "<leader>s", ":%s//g<Left><Left>", opts)
 
--- Populate substitution
-nnoremap("<leader>s", ":s//g<Left><Left>")
-nnoremap("<leader>S", ":%s//g<Left><Left>")
-nnoremap("<leader><C-s>", ":%s//gc<Left><Left><Left>")
+-- =========================================================================
+-- LOCATION LIST / QUICKFIX
+-- =========================================================================
+map("n", "<leader>lo", ":lopen<CR>", opts)
+map("n", "<leader>lc", ":lclose<CR>", opts)
+map("n", "<C-n>", ":lnext<CR>", opts)
+map("n", "<C-p>", ":lprev<CR>", opts)
 
-vnoremap("<leader>s", ":s//g<Left><Left>")
-vnoremap("<leader><A-s>", ":%s//g<Left><Left>")
-vnoremap("<leader>S", ":%s//gc<Left><Left><Left>")
+map("n", "<leader>co", ":copen<CR>", opts)
+map("n", "<leader>cc", ":cclose<CR>", opts)
+map("n", "<C-N>", ":cnext<CR>", opts)
+map("n", "<C-P>", ":cprev<CR>", opts)
 
--- Delete buffer
-nnoremap("<A-w>", ":bd<CR>")
+-- =========================================================================
+-- TELESCOPE (autoload-safe wrappers)
+-- =========================================================================
+local function tele(builtin, opts)
+  return function()
+    local ok, b = pcall(require, 'telescope.builtin')
+    if ok then b[builtin](opts or {}) end
+  end
+end
 
--- Yank to end of line
-nnoremap("Y", "y$")
+map("n", "<leader>o", tele("find_files"), opts)
+map("n", "<leader>H", tele("find_files", { hidden = true }), opts)
+map("n", "<leader>b", tele("buffers"), opts)
+map("n", "<leader>lg", tele("live_grep"), opts)
+map("n", "<leader>pr", tele("oldfiles"), opts)
 
--- Paste into selection without overwriting p register
-xnoremap("<leader>p", '\"_dP')
+-- =========================================================================
+-- FILE EXPLORER
+-- =========================================================================
+map("n", "<leader>e", ":NvimTreeToggle<CR>", opts)
 
--- Delete without overwriting register
-nnoremap("<leader>d", '\"_d')
-vnoremap("<leader>d", '\"_d')
--- nnoremap("x", '\"_x')  -- never save deleted character to clippboard
+-- =========================================================================
+-- GIT (fugitive)
+-- =========================================================================
+map("n", "<leader>G", ":G<CR>", opts)
+map("n", "<leader>gl", ":Gclog<CR>", opts)
 
--- Copy to system clippboard
-nnoremap("<leader>y", '"+y')
-vnoremap("<leader>y", '"+y')
+-- =========================================================================
+-- DIAGNOSTICS
+-- =========================================================================
+map("n", "<leader>i", function()
+  vim.diagnostic.open_float(0, { scope = "line" })
+end, opts)
 
--- Paste from system clippboard
-nnoremap("<leader>P", '"+p')
-vnoremap("<leader>P", '"+p')
+-- =========================================================================
+-- NOTIFICATIONS
+-- =========================================================================
+map("n", "<leader>uh", function()
+  local ok, telescope = pcall(require, "telescope")
+  if ok then telescope.extensions.notify.notify() end
+end, opts)
 
--- Clear highlight search
-nnoremap("<leader>nh", ":nohlsearch<CR>")
-vnoremap("<leader>nh", ":nohlsearch<CR>")
+map("n", "<leader>un", function()
+  local ok, notify = pcall(require, "notify")
+  if ok then notify.dismiss({ silent = true, pending = true }) end
+end, opts)
 
--- Local list
-nnoremap("<leader>lo", ":lopen<CR>")
-nnoremap("<leader>lc", ":lclose<CR>")
-nnoremap("<C-n>", ":lnext<CR>")
-nnoremap("<C-p>", ":lprev<CR>")
-
--- Quickfix list
-nnoremap("<leader>co", ":copen<CR>")
-nnoremap("<leader>cc", ":cclose<CR>")
-nnoremap("<C-N>", ":cnext<CR>")
-nnoremap("<C-P>", ":cprev<CR>")
-
--- Open file in default application
-nnoremap("<leader>xo", "<Cmd> !xdg-open %<CR><CR>")
-
--- Show line diagnostics
-nnoremap("<leader>i", '<Cmd>lua vim.diagnostic.open_float(0, {scope = "line"})<CR>')
-
--- Open local diagnostics in local list
-nnoremap("<leader>I", "<cmd>Trouble diagnostics toggle focus=false filter.buf=0<cr>")
-
--- Open all project diagnostics in quickfix list
-nnoremap("<leader><A-I>", "<cmd>Toggle diagnostics toggle focus=false filter.severity=vim.diagnostic.severity.ERROR<cr>")
-
--- File explorer
--- nnoremap('<leader>e', '<Cmd>25Lexplore<CR>', { desc = 'Toggle Left-side netrw file explorer with 25 col width' })
+-- =========================================================================
+-- FUN
+-- =========================================================================
+map("n", "<leader>fml", function()
+  local ca = require('cellular-automaton')
+  ca.start_animation('scramble')
+end, opts)

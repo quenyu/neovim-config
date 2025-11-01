@@ -4,19 +4,51 @@ return {
   -- '0.1.x' for stable ver.
   dependencies = {
     "nvim-lua/plenary.nvim",
-    { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+    -- fzf-native: use cmake for Windows, make for Unix
+    {
+      "nvim-telescope/telescope-fzf-native.nvim",
+      build = vim.fn.has("win32") == 1 and "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build" or "make",
+    },
     "nvim-tree/nvim-web-devicons",
   },
   config = function ()
     local telescope = require("telescope")
     local actions = require("telescope.actions")
-    -- local builtin = require("telescope.builtin")
+    local builtin = require("telescope.builtin")
+    local utils = require("utils")
 
-    telescope.load_extension('fzf')
+    -- Load fzf extension if available (requires compilation)
+    pcall(function()
+      telescope.load_extension('fzf')
+    end)
+    
+    -- Load notify extension if available
+    pcall(function()
+      telescope.load_extension('notify')
+    end)
 
     telescope.setup({
       defaults = {
         sorting_strategy = "ascending",
+        -- Use fd for file finding (faster than built-in)
+        vimgrep_arguments = {
+          "rg",
+          "--color=never",
+          "--no-heading",
+          "--with-filename",
+          "--line-number",
+          "--column",
+          "--smart-case",
+        },
+        file_ignore_patterns = {
+          "%.git/",
+          "%.venv/",
+          "node_modules/",
+          "__pycache__/",
+          "%.o",
+          "%.so",
+          "%.exe",
+        },
         mappings = {
           i = {
             ['<C-j>'] = actions.move_selection_next,
@@ -45,16 +77,8 @@ return {
       },
     })
 
-    -- Telescope-specific keymaps
-    local utils = require("utils")
-
-    utils.nnoremap("<leader>o", "<Cmd>Telescope find_files<CR>")
-    utils.nnoremap("<leader>H", "<Cmd>Telescope find_files hidden=true<CR>")
-    utils.nnoremap("<leader>b", "<Cmd>Telescope buffers<CR>")
-    utils.nnoremap("<leader>lg", "<Cmd>Telescope live_grep<CR>")
-    utils.nnoremap(
-      "<leader>pr", "<cmd>Telescope oldfiles<CR>" -- Fuzzy find recent files
-    )
+    -- Telescope keymaps are now set up in lua/config/keymaps.lua
+    -- This ensures they are available immediately, not just after plugin loads
 
   end
 }

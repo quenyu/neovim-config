@@ -7,16 +7,21 @@ return {
     local utils = require("utils")
 
     nvimtree.setup({
-      -- Allow using gx
       disable_netrw = false,
       hijack_netrw = false,
-      update_cwd = true,
+
+      -- Main parameters for root / relative paths
+      sync_root_with_cwd = true,
+      respect_buf_cwd = true,
+
+      update_focused_file = {
+        enable = true,
+        update_cwd = true,      -- Change current working directory to the file's directory
+      },
 
       actions = {
         open_file = {
-          window_picker = {
-            enable = false,
-          },
+          window_picker = { enable = false },
         },
       },
 
@@ -29,12 +34,10 @@ return {
           "__pycache__",
           ".DS_Store",
         },
-        exclude = {
-          ".gitignore",
-        }
+        exclude = { ".gitignore" },
       },
     })
 
-    utils.nnoremap("<leader>e", "<Cmd>NvimTreeToggle<CR>")  -- NvimTree
+    -- NvimTree keymap is now in lua/config/keymaps.lua
   end
 }
