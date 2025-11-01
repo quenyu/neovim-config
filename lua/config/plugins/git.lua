@@ -7,26 +7,63 @@ return {
     end
   },
 
-  -- Pretty quickfix
+  -- TODO Comments - highlight and search
+  {
+    "folke/todo-comments.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    event = { "BufReadPre", "BufNewFile" },
+    opts = {
+      signs = true,
+      keywords = {
+        FIX = { icon = " ", color = "error", alt = { "FIXME", "BUG", "FIXIT", "ISSUE" } },
+        TODO = { icon = " ", color = "info" },
+        HACK = { icon = " ", color = "warning" },
+        WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
+        PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
+        NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+        TEST = { icon = "⏲ ", color = "test", alt = { "TESTING", "PASSED", "FAILED" } },
+      },
+      highlight = {
+        before = "",
+        keyword = "wide",
+        after = "fg",
+        pattern = [[.*<(KEYWORDS)\s*:]],
+        comments_only = true,
+      },
+    },
+  },
+
+  -- Trouble - pretty diagnostics, references, quickfix and location list
   {
     "folke/trouble.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons", "folke/todo-comments.nvim" },
-    layz = true,
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    cmd = "Trouble",
     opts = {
       focus = true,
+      modes = {
+        preview_float = {
+          mode = "diagnostics",
+          preview = {
+            type = "float",
+            relative = "editor",
+            border = "rounded",
+            title = "Preview",
+            title_pos = "center",
+            position = { 0, -2 },
+            size = { width = 0.3, height = 0.3 },
+            zindex = 200,
+          },
+        },
+      },
     },
-    cmd = "Trouble",
-    -- keys = {
-    --   { "<leader>xw", "<cmd>Trouble diagnostics toggle<CR>", desc = "Open trouble workspace diagnostics" },
-    --   {
-    --     "<leader>xd",
-    --     "<cmd>Trouble diagnostics toggle filter.buf=0<CR>",
-    --     desc = "Open trouble document diagnostics",
-    --   },
-    --   { "<leader>xq", "<cmd>Trouble quickfix toggle<CR>", desc = "Open trouble quickfix list" },
-    --   { "<leader>xl", "<cmd>Trouble loclist toggle<CR>", desc = "Open trouble location list" },
-    --   { "<leader>xt", "<cmd>Trouble todo toggle<CR>", desc = "Open todos in trouble" },
-    -- },
+    keys = {
+      { "<leader>xx", "<cmd>Trouble diagnostics toggle<CR>", desc = "Diagnostics (Trouble)" },
+      { "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<CR>", desc = "Buffer Diagnostics (Trouble)" },
+      { "<leader>cs", "<cmd>Trouble symbols toggle focus=false<CR>", desc = "Symbols (Trouble)" },
+      { "<leader>xL", "<cmd>Trouble loclist toggle<CR>", desc = "Location List (Trouble)" },
+      { "<leader>xQ", "<cmd>Trouble qflist toggle<CR>", desc = "Quickfix List (Trouble)" },
+      { "<leader>xt", "<cmd>Trouble todo toggle<CR>", desc = "TODOs (Trouble)" },
+    },
   },
 
   -- Gitsigns

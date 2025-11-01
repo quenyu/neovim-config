@@ -107,6 +107,28 @@ map("n", "<leader>i", function()
 end, opts)
 
 -- =========================================================================
+-- TROUBLE (diagnostics viewer)
+-- =========================================================================
+map("n", "<leader>xx", ":Trouble diagnostics toggle<CR>", opts)
+map("n", "<leader>xX", ":Trouble diagnostics toggle filter.buf=0<CR>", opts)
+map("n", "<leader>xQ", ":Trouble qflist toggle<CR>", opts)
+map("n", "<leader>xL", ":Trouble loclist toggle<CR>", opts)
+map("n", "<leader>xt", ":Trouble todo toggle<CR>", opts)
+
+-- =========================================================================
+-- TODO COMMENTS
+-- =========================================================================
+map("n", "]t", function()
+  require("todo-comments").jump_next()
+end, { desc = "Next todo comment" })
+
+map("n", "[t", function()
+  require("todo-comments").jump_prev()
+end, { desc = "Previous todo comment" })
+
+map("n", "<leader>st", ":TodoTelescope<CR>", opts)
+
+-- =========================================================================
 -- NOTIFICATIONS
 -- =========================================================================
 map("n", "<leader>uh", function()
