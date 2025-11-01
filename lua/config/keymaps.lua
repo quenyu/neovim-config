@@ -93,10 +93,11 @@ map("n", "<leader>pr", tele("oldfiles"), opts)
 map("n", "<leader>e", ":NvimTreeToggle<CR>", opts)
 
 -- =========================================================================
--- GIT (fugitive)
+-- GIT (fugitive & lazygit)
 -- =========================================================================
 map("n", "<leader>G", ":G<CR>", opts)
 map("n", "<leader>gl", ":Gclog<CR>", opts)
+map("n", "<leader>gg", ":LazyGit<CR>", opts)
 
 -- =========================================================================
 -- DIAGNOSTICS
